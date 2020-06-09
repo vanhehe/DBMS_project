@@ -1,13 +1,17 @@
-#include "functions.h"
+#include "Functions.h"
 
 
 void ItemEntry() {
-	//The function allows you to add the "Items.txt"
-//selected quantity of goods to the list of items as:
-// Item name
-//Item price
-// Item catrgory
-// Item quantity
+
+
+	//The function allows you to add items in "Items.txt"
+	//selected quantity of goods to the list of items as:
+	// Item name
+	//Item price
+	// Item catrgory
+	// Item quantity
+
+
 	string name;
 	int price;
 	string category;
@@ -26,10 +30,10 @@ void ItemEntry() {
 			cin >> category;
 			cout << "Enter item quantity- ";
 			cin >> quantity;
-			record << name << "\n";
-			record << price << "\n";
-			record << category << "\n";
-			record << quantity << "\n";
+			record << "Item_name: " << name << "\n";
+			record << "Item_price: " << price << "\n";
+			record << "Item_category: " << category << "\n";
+			record << "Item_quantity: " << quantity << "\n";
 			cout << "__________________________________" << "\n";
 		}
 	}
@@ -44,13 +48,16 @@ void ItemEntry() {
 
 
 void EditItem() {
+
+
 	//	The function displays all items, asks which one
-//we want to change, and changes it in the file "Items.txt"
+	//we want to change, and changes it in the file "Items.txt"
+
 
 	Clone("Items.txt", "Items_Clone.txt");
 	ifstream reading("Items_Clone.txt");
 	ofstream record("Items.txt", ios::out);
-	cout << "Choise item number for editting: " << "\n";
+	cout << "Choose item number for editting: " << "\n";
 	if (reading) {
 		if (record) {
 			string name, name1;
@@ -60,7 +67,7 @@ void EditItem() {
 			int n, i = 1, j = 1;
 			while (getline(reading, s)) {
 				if (i % 4 == 1) {
-					cout << "(" << ((i - 1) / 4) + 1 << ") " << s << "\n";
+					cout << "(" << ((i - 1) / 4) + 1 << ") " << s.substr(11) << "\n";
 				}
 				i++;
 			}
@@ -81,31 +88,31 @@ void EditItem() {
 					if (j == i) {
 						name = s;
 						if (stat == 1) {
-							cout << "Enter new name for " << name << ": ";
+							cout << "Enter new name for " << name.substr(11) << ": ";
 							cin >> name1;
-							record << name1 << "\n";
+							record << "Item_name: " << name1 << "\n";
 							j++;
 							continue;
 						}
 					}
 					if (j == i + 1 && stat == 2) {
-						cout << "Enter new price of " << name << ": ";
+						cout << "Enter new price of " << name.substr(11) << ": ";
 						cin >> price;
-						record << price << "\n";
+						record << "Item_price: " << price << "\n";
 						j++;
 						continue;
 					}
 					if (j == i + 2 && stat == 3) {
-						cout << "Enter new category of " << name << ": ";
+						cout << "Enter new category of " << name.substr(11) << ": ";
 						cin >> category;
-						record << category << "\n";
+						record << "Item_category: " << category << "\n";
 						j++;
 						continue;
 					}
 					if (j == i + 3 && stat == 4) {
-						cout << "Enter new quantity of " << name << ": ";
+						cout << "Enter new quantity of " << name.substr(11) << ": ";
 						cin >> quantity;
-						record << quantity << "\n";
+						record << "Item_quantity: " << quantity << "\n";
 						j++;
 						continue;
 					}
@@ -125,7 +132,11 @@ void EditItem() {
 
 
 void Clone(string from, string to) {
+
+
 	// The function accepts two files as input(where to copy and what to copy) and copy
+
+
 	ifstream reading(from);
 	if (reading)
 	{
@@ -139,9 +150,13 @@ void Clone(string from, string to) {
 
 
 void CreateOrder() {
+
+
 	//The function requires you to enter the number of products 
 	//that you want to add to the order, asks which goods and 
 	//how many, and writes them to a file "Orders.txt"
+
+
 	string order_number;
 	string item_name, m;
 	int item_quantity;
@@ -162,8 +177,8 @@ void CreateOrder() {
 		cin >> order_number;
 		cout << "Enter client id- ";
 		cin >> client_id;
-		record << order_number << "\n";
-		record << client_id << "\n" << "{" << "\n";
+		record << "Order_number: " << order_number << "\n";
+		record << "Client_id: " << client_id << "\n" << "{" << "\n";
 		for (int i = 0; i < n; i++) {
 			ifstream reading("Items.txt");
 			bool flag = false;
@@ -175,25 +190,26 @@ void CreateOrder() {
 			cin >> item_quantity;
 			while (getline(reading, s)) {
 				cnt1++;
-				if (s == item_name) {
+				string s1 = s;
+				if (s1.substr(11) == item_name) {
 					flag = true;
 				}
 				if (flag) {
 					j++;
 				}
 				if (j == 2) {
+					s = s.substr(12);
 					order_price += atoi(s.c_str()) * item_quantity;
 				}
-				if (j == 3) {
-				}
 				if (j == 4) {
+					s = s.substr(15);
 					if (item_quantity > atoi(s.c_str())) {
 						cout << "Unfortunately, the items are not enough." << "\n"
 							<< "Maximum quantity of " << item_name << ": " << atoi(s.c_str()) << "\n" << "\n";
 					}
 					else {
-						record << item_name << "\n";
-						record << item_quantity << "\n";
+						record << "Item_name: " << item_name << "\n";
+						record << "Item_quantity: " << item_quantity << "\n";
 
 						Edit2(item_name, item_quantity);
 						cout << "Item was added in your order" << "\n";
@@ -210,7 +226,7 @@ void CreateOrder() {
 
 		}
 		record << "}" << "\n";
-		record << order_price << "\n";
+		record << "Order_price: " << order_price << "\n";
 		if (cnt2 == 0) {
 			cout << "Your order was deleted because it was empty. " << "\n";
 			bool empty = true;
@@ -229,8 +245,12 @@ void CreateOrder() {
 
 
 void Edit2(string item_name, int item_quantity) {
+
+
 	//The function changes the number of items after the cancellation of the order 
 	//(adds as much as was ordered to the quantity of items in "Items.txt")
+
+
 	Clone("Items.txt", "Items_Clone.txt");
 	string s, m;
 	bool flag = false;
@@ -243,14 +263,14 @@ void Edit2(string item_name, int item_quantity) {
 	}
 	while (getline(reading, s)) {
 		cnt2++;
-		if (s == item_name) {
+		if (s.substr(11) == item_name) {
 			flag = true;
 		}
 		if (flag) {
 			j++;
 		}
 		if (j == 4) {
-			record << atoi(s.c_str()) - item_quantity << "\n";
+			record <<"Item_quantity: "<< atoi(s.substr(15).c_str()) - item_quantity << "\n";
 			continue;
 
 		}
@@ -262,10 +282,14 @@ void Edit2(string item_name, int item_quantity) {
 
 
 void CanselOrder() {
+
+
 	// The function displays the numbers of orders available for deletion. 
-//After selecting the order number, it passes it to the function CanselOrder2()
+	//After selecting the order number, it passes it to the function CanselOrder2()
+
+
 	ifstream reading("Orders.txt");
-	cout << "Choise order number for editting? " << "\n";
+	cout << "Choose order number for editting? " << "\n";
 	cout << "Order numbers: " << "\n";
 	if (reading) {
 		string n;
@@ -279,7 +303,7 @@ void CanselOrder() {
 				continue;
 			}
 			if (flag2) {
-				cout << s << "\n";
+				cout << s.substr(14) << "\n";
 				flag2 = false;
 				continue;
 			}
@@ -289,7 +313,7 @@ void CanselOrder() {
 				continue;
 			}
 			if (j == 1) {
-				cout << s << "\n";
+				cout << s.substr(14) << "\n";
 				j = 0;
 				continue;
 			}
@@ -303,8 +327,12 @@ void CanselOrder() {
 
 
 void CanselOrder2(string n, bool empty) {
+
+
 	//The function accepts the order number as input and deletes it. 
-//In case of successful finding, it starts the function Edit2() which corrects quantity of Item
+	//In case of successful finding, it starts the function Edit2() which corrects quantity of Item
+
+
 	Clone("Orders.txt", "Orders_Clone.txt");
 	ofstream record("Orders.txt", ios::out);
 	ifstream reading1("Orders_Clone.txt");
@@ -312,10 +340,12 @@ void CanselOrder2(string n, bool empty) {
 	string s;
 	bool flag = false, suc = false;
 	while (getline(reading1, s)) {
-		if (s == n) {
-			flag = true;
-			suc = true;
-			continue;
+		if (s.size() > 14) {
+			if (s.substr(14) == n) {
+				flag = true;
+				suc = true;
+				continue;
+			}
 		}
 		if (flag) {
 			while (s != "}") {
@@ -325,14 +355,18 @@ void CanselOrder2(string n, bool empty) {
 					getline(reading1, s);
 					break;
 				}
+				getline(reading1, s);
 				if (s == "{") {
 					getline(reading1, s);
+					while (s != "}") {
+						string item_name = s.substr(11);
+						getline(reading1, s);
+						s = s.substr(15);
+						int qunt = atoi(s.c_str());
+						Edit2(item_name, -qunt);
+						getline(reading1, s);
+					}
 				}
-				string item_name = s;
-				getline(reading1, s);
-				int qunt = atoi(s.c_str());
-				Edit2(item_name, -qunt);
-				getline(reading1, s);
 			}
 			getline(reading1, s);
 			flag = false;
@@ -351,10 +385,13 @@ void CanselOrder2(string n, bool empty) {
 
 
 
-
 void ClearItems() {
+
+
 	//the function deletes one item of your choice 
 	//or all products at once from "Items.txt"
+
+
 	int status, n, i = 1;
 	string s;
 	Clone("Items.txt", "Items_Clone.txt");
@@ -363,7 +400,7 @@ void ClearItems() {
 	cout << "Items list: " << "\n";
 	while (getline(read1, s)) {
 		if (i % 4 == 1) {
-			cout << s << "\n";
+			cout << s.substr(11) << "\n";
 		}
 		i++;
 	}
@@ -382,7 +419,7 @@ void ClearItems() {
 		cin >> itname;
 		while (getline(reading, s)) {
 			k++;
-			if (s == itname) {
+			if (s.substr(11) == itname) {
 				flag = true;
 				flag2 = true;
 			}
@@ -414,12 +451,14 @@ void ClearItems() {
 
 
 
-
-
 void ViewItems() {
+
+
 	//The function allows you to conveniently view a list of all things from the catalog "Items.txt".
-//It offers us filtering by price, category and quantity.
-//Also filtering can be omitted
+	//It offers us filtering by price, category and quantity.
+	//Also filtering can be omitted
+
+
 	string name, price_s, quantity_s;
 	int price;
 	string category;
@@ -460,16 +499,18 @@ void ViewItems() {
 			digit = atoi(dig.c_str());
 			while (getline(read, name)) {
 				getline(read, price_s);
+				price_s = price_s.substr(12);
 				price = atoi(price_s.c_str());
 				getline(read, category);
 				getline(read, quantity_s);
+				quantity_s = quantity_s.substr(15);
 				quantity = atoi(quantity_s.c_str());
 				if (s == "=") {
 					if (price == digit) {
-						record << name << "\n"
-							<< price << "\n"
+						record <<name << "\n"
+							<< "Item_price: " << price << "\n"
 							<< category << "\n"
-							<< quantity << "\n";
+							<< "Item_quantity: " << quantity << "\n";
 						continue;
 					}
 					continue;
@@ -477,9 +518,9 @@ void ViewItems() {
 				if (s == ">") {
 					if (price > digit) {
 						record << name << "\n"
-							<< price << "\n"
+							<< "Item_price: " << price << "\n"
 							<< category << "\n"
-							<< quantity << "\n";
+							<< "Item_quantity: " << quantity << "\n";
 						continue;
 					}
 					continue;
@@ -487,9 +528,9 @@ void ViewItems() {
 				if (s == "<") {
 					if (price < digit) {
 						record << name << "\n"
-							<< price << "\n"
+							<< "Item_price: " << price << "\n"
 							<< category << "\n"
-							<< quantity << "\n";
+							<< "Item_quantity: " << quantity << "\n";
 						continue;
 					}
 					continue;
@@ -504,7 +545,7 @@ void ViewItems() {
 				getline(read1, s);
 				getline(read1, s);
 				if (S.find(s) == S.end()) {
-					cout << s << "\n";
+					cout << s.substr(15) << "\n";
 				}
 				S.insert(s);
 				getline(read1, s);
@@ -516,15 +557,14 @@ void ViewItems() {
 			cin >> cond;
 			while (getline(read, name)) {
 				getline(read, price_s);
-				price = atoi(price_s.c_str());
 				getline(read, category);
 				getline(read, quantity_s);
 				quantity = atoi(quantity_s.c_str());
-				if (category == cond) {
+				if (category.substr(15) == cond) {
 					record << name << "\n"
-						<< price << "\n"
+						<< price_s << "\n"
 						<< category << "\n"
-						<< quantity << "\n";
+						<< quantity_s << "\n";
 				}
 			}
 
@@ -541,16 +581,18 @@ void ViewItems() {
 			digit = atoi(dig.c_str());
 			while (getline(read, name)) {
 				getline(read, price_s);
+				price_s = price_s.substr(12);
 				price = atoi(price_s.c_str());
 				getline(read, category);
 				getline(read, quantity_s);
+				quantity_s = quantity_s.substr(15);
 				quantity = atoi(quantity_s.c_str());
 				if (s == "=") {
 					if (quantity == digit) {
 						record << name << "\n"
-							<< price << "\n"
+							<< "Item_price: " << price << "\n"
 							<< category << "\n"
-							<< quantity << "\n";
+							<< "Item_quantity: " << quantity << "\n";
 						continue;
 					}
 					continue;
@@ -558,9 +600,9 @@ void ViewItems() {
 				if (s == ">") {
 					if (quantity > digit) {
 						record << name << "\n"
-							<< price << "\n"
+							<< "Item_price: " << price << "\n"
 							<< category << "\n"
-							<< quantity << "\n";
+							<< "Item_quantity: " << quantity << "\n";
 						continue;
 					}
 					continue;
@@ -568,9 +610,9 @@ void ViewItems() {
 				if (s == "<") {
 					if (quantity < digit) {
 						record << name << "\n"
-							<< price << "\n"
+							<< "Item_price: " << price << "\n"
 							<< category << "\n"
-							<< quantity << "\n";
+							<< "Item_quantity: " << quantity << "\n";
 						continue;
 					}
 					continue;
@@ -581,28 +623,31 @@ void ViewItems() {
 	ifstream read(actual_file);
 	cout << "Items:" << "\n" << "\n";
 	while (getline(read, s)) {
-		cout << "Name:     " << s << "\n";
+		cout << s << "\n";
 		getline(read, s);
-		cout << "Price:    " << s << "\n";
+		cout << s << "\n";
 		getline(read, s);
-		cout << "Category: " << s << "\n";
+		cout << s << "\n";
 		getline(read, s);
-		cout << "Quantity: " << s << "\n" << "\n";
+		cout << s << "\n" << "\n";
 	}
 	cout << "This items list saved in " << actual_file << "\n" << "\n";
 }
 
 
 
-
 void ViewOrders() {
+
+
 	//The function conveniently displays the list of products in the console.
-//It offers filtering by price and client’s ID, 
-//but you can refuse it then everything will be displayed by default.
+	//It offers filtering by price and client’s ID, 
+	//but you can refuse it then everything will be displayed by default.
+
+
 	string name, price_s, quantity_s;
 	int price;
 	string client;
-	string s, c, cond, dig, filtering = "a", actual_file = "Orders.txt";
+	string s, s1, c, cond, dig, filtering = "a", actual_file = "Orders.txt";
 	string fp = "a", fc = "a";
 	int n = 0, digit = 0;
 	cout << "Do you want to filter order list? (y/n)" << "\n";
@@ -641,7 +686,9 @@ void ViewOrders() {
 					getline(read, s);
 				}
 				temp << s;
+				temp.close();
 				getline(read, price_s);
+				price_s = price_s.substr(13);
 				price = atoi(price_s.c_str());
 				if (c == "=") {
 					if (price == digit) {
@@ -651,8 +698,7 @@ void ViewOrders() {
 						while (getline(temp, s)) {
 							record << s << "\n";
 						}
-						record << "}" << "\n";
-						record << price << "\n";
+						record << "Order_price: " << price << "\n";
 						continue;
 					}
 					continue;
@@ -665,8 +711,7 @@ void ViewOrders() {
 						while (getline(temp, s)) {
 							record << s << "\n";
 						}
-						record << "}" << "\n";
-						record << price << "\n";
+						record << "Order_price: " << price << "\n";
 						continue;
 					}
 					continue;
@@ -679,8 +724,7 @@ void ViewOrders() {
 						while (getline(temp, s)) {
 							record << s << "\n";
 						}
-						record << "}" << "\n";
-						record << price << "\n";
+						record << "Order_price: " << price << "\n";
 						continue;
 					}
 					continue;
@@ -694,7 +738,7 @@ void ViewOrders() {
 			while (getline(read1, s)) {
 				getline(read1, client);
 				if (S.find(client) == S.end()) {
-					cout << client << "\n";
+					cout << client.substr(11) << "\n";
 				}
 				S.insert(client);
 				getline(read1, s);
@@ -711,7 +755,7 @@ void ViewOrders() {
 			while (getline(read, name)) {
 				getline(read, client);
 				getline(read, s);
-				if (client == cond) {
+				if (client.substr(11) == cond) {
 					record << name << "\n"
 						<< client << "\n"
 						<< s << "\n";
@@ -735,19 +779,19 @@ void ViewOrders() {
 	ifstream read(actual_file);
 	cout << "Orders:" << "\n" << "\n";
 	while (getline(read, s)) {
-		cout << "Order ¹:      " << s << "\n";
+		cout << s << "\n";
 		getline(read, s);
-		cout << "Client id:    " << s << "\n";
+		cout << s << "\n";
 		getline(read, s);
 		getline(read, s);
 		while (s != "}") {
-			cout << "Item:        " << s << "\n";
+			cout << s << "\n";
 			getline(read, s);
-			cout << "Quantity:    " << s << "\n";
+			cout << s << "\n";
 			getline(read, s);
 		}
 		getline(read, s);
-		cout << "Order price: " << s << "\n" << "\n";
+		cout << s << "\n" << "\n";
 	}
 	cout << "This orders list saved in " << actual_file << "\n" << "\n";
 }
